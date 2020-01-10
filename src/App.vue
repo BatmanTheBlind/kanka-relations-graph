@@ -1,17 +1,22 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <input v-model="authenticationKey" />
+    <kanka-relations :authenticationKey="authenticationKey" :campaign="17724" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import KankaRelations from './components/KankaRelations.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    KankaRelations
+  },
+  data () {
+    return { 
+      authenticationKey: ''
+    }
   }
 }
 </script>
