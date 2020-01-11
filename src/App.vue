@@ -1,21 +1,31 @@
 <template>
   <div id="app">
-    <input v-model="authenticationKey" />
-    <kanka-relations :authenticationKey="authenticationKey" :campaign="17724" />
+    <div class="header" >
+      <kanka-authentication v-model="authenticationKey" :profile="profile" />
+      <kanka-profile :authenticationKey="authenticationKey" v-model="profile" />
+    </div>
+    <div>
+      <kanka-relations :authenticationKey="authenticationKey" :campaign="17724" />
+    </div>
   </div>
 </template>
 
 <script>
 import KankaRelations from './components/KankaRelations.vue'
+import KankaProfile from './components/KankaProfile.vue'
+import KankaAuthentication from './components/KankaAuthentication.vue'
 
 export default {
   name: 'app',
   components: {
+    KankaProfile,
+    KankaAuthentication,
     KankaRelations
   },
   data () {
     return { 
-      authenticationKey: ''
+      authenticationKey: '',
+      profile: null
     }
   }
 }
@@ -29,5 +39,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.header {
+  display: flex;
 }
 </style>

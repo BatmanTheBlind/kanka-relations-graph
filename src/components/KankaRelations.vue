@@ -1,18 +1,21 @@
 <template>
   <div>
     <h2>Entities</h2>
-    <template v-for="entity in entities">
-      <div :key="entity.id" >
-        <h4>{{entity.name}}</h4>
-        <img :src="`${entity.image_thumb}`" >
-      </div>
-    </template>
+    <div class="container">
+      <template v-for="entity in entities">
+        <kanka-character :key="entity.id" :entity="entity" />
+      </template>
+    </div>
   </div>
 </template>
 
 <script>
+import KankaCharacter from './KankaCharacter.vue'
 export default {
   name: 'KankaRelations',
+  components: {
+    KankaCharacter
+  },
   props: {
     campaign: Number,
     relations: Array,
@@ -54,5 +57,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+  }
 </style>
