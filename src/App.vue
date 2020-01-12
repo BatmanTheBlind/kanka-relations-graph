@@ -2,10 +2,15 @@
   <div id="app">
     <div class="header" >
       <kanka-authentication v-model="authenticationKey" :profile="profile" />
-      <kanka-profile :authenticationKey="authenticationKey" v-model="profile" />
+      <kanka-profile
+        :authenticationKey="authenticationKey" 
+        v-model="profile" />
     </div>
     <div>
-      <kanka-relations :authenticationKey="authenticationKey" :campaign="17724" />
+      <kanka-relations 
+        :radius="240"
+        :authenticationKey="authenticationKey" 
+        :campaign="17724" />
     </div>
   </div>
 </template>

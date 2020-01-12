@@ -3,16 +3,15 @@
 <!-- entities & relations -->
     <h2>Entities</h2>
     <div class="container">
-        <svg width="200" height="1200">
+        <svg :width="this.radius * 3" :height="this.radius * 3">
           <kanka-character-svg
             :key="entity.id"
             v-for="(entity, index) in entities"
             :entity="entity"
-            :point="{
-              x: 10,
-              y: index * 75
-            }"
+            :index = index
+            :point="getPoint(index * step)"
           />
+          
         </svg>
     </div>
   </div>
@@ -27,9 +26,8 @@ export default {
   },
   props: {
     campaign: Number,
-    relations: Array,
-    entities: Array,
-    authenticationKey: String
+    authenticationKey: String,
+    radius: Number
   },
   data () {
     return {
@@ -38,7 +36,8 @@ export default {
           'Authorization': 'Bearer ' + this.authenticationKey,
           'Accept': 'application/json'
         }
-      }
+      },
+      entities: []
     }
   },
   async mounted () {
@@ -52,13 +51,28 @@ export default {
       await this.loadEntities()
     }
   },
+  computed: {
+    step () {
+      return Math.floor(360 / this.entities.length)
+    }
+  },
   methods: {
     async loadEntities () {
       const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/characters`, this.config)
       this.entities = response.body.data
     },
     async loadRelations () {
-
+      this.entities.map(async entity => {
+        const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/entities/${entity.id}/relations`, this.config)
+        entity.relations = response.body.data
+      })
+    },
+    getPoint (i) {
+      const angle = i * Math.PI / 180
+      const x = (this.radius * Math.cos(angle)) + this.radius
+      const y = (this.radius * Math.sin(angle)) + this.radius
+      return { x, y }
+      
     }
   }
 }

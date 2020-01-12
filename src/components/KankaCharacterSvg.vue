@@ -31,12 +31,16 @@ export default {
   name: 'KankaCharacterSvg',
   props: {
     point: Object,
-    entity: Object
+    entity: Object,
+    index: Number
   },
   data () {
     return {
       
     }
+  },
+  methods: {
+    
   }
 }
 </script>
