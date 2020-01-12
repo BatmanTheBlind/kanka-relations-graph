@@ -1,20 +1,29 @@
 <template>
   <div>
+<!-- entities & relations -->
     <h2>Entities</h2>
     <div class="container">
-      <template v-for="entity in entities">
-        <kanka-character :key="entity.id" :entity="entity" />
-      </template>
+        <svg width="200" height="1200">
+          <kanka-character-svg
+            :key="entity.id"
+            v-for="(entity, index) in entities"
+            :entity="entity"
+            :point="{
+              x: 10,
+              y: index * 75
+            }"
+          />
+        </svg>
     </div>
   </div>
 </template>
 
 <script>
-import KankaCharacter from './KankaCharacter.vue'
+import KankaCharacterSvg from './KankaCharacterSvg.vue'
 export default {
   name: 'KankaRelations',
   components: {
-    KankaCharacter
+    KankaCharacterSvg
   },
   props: {
     campaign: Number,
