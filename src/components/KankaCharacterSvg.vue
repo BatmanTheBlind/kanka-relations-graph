@@ -1,28 +1,61 @@
 <template>
-    <g>
-      <rect 
-        :x="point.x"
-        :y="point.y"
-        style="fill:rgb(255,0,0);stroke-width:1;stroke:rgb(0,0,0)"
-        width="150"
-        height="60"
-        rx="10"
-        ry="10"/>
+    <g :transform="`translate(${point.x},${point.y})`" >
+      <!-- pattern -->
+      <defs>
+        <pattern :id="`image${entity.id}`" x="0%" y="0%" height="100%" width="100%"
+                viewBox="0 0 512 512">
+          <image x="0%" y="0%" width="512" height="512" :xlink:href="entity.image_full"></image>
+        </pattern>
+      </defs>
+ 
+      <circle 
+        :cx="0"
+        :cy="0"
+        :fill="`url(#image${entity.id})`"
+        :r="radius"/>
       <text 
-        :x="point.x"
-        :y="point.y + 20"
+        :x="0"
+        :y="-radius * 0.9"
+        text-anchor="middle"
         font-family="Verdana" 
         font-size="15">
-        {{entity.name}}
+        <tspan
+          :key="index"
+          v-for="(partName, index) in entity.name.split(' ')"
+          x="0"
+          dy="1.2em"
+        >
+          {{partName}}
+        </tspan>
+        <tspan
+          :key="index"
+          v-for="(partName, index) in entity.title.split(' ')"
+          x="0"
+          dy="1.2em"
+          fill="white"
+          text-anchor="middle"
+          font-family="Verdana" 
+          font-size="10"
+        >
+          {{partName}}
+        </tspan>
       </text>
-      <text 
-        :x="point.x"
-        :y="point.y + 40"
+      <!-- <text 
+        :x="0"
+        :y="10"
         fill="white"
+        text-anchor="middle"
         font-family="Verdana" 
         font-size="10">
-        {{entity.title}}
-      </text>
+        <tspan
+          :key="index"
+          v-for="(partName, index) in entity.title.split(' ')"
+          x="0"
+          dy="1.2em"
+        >
+          {{partName}}
+        </tspan>
+      </text> -->
     </g>
 </template>
 
@@ -32,7 +65,8 @@ export default {
   props: {
     point: Object,
     entity: Object,
-    index: Number
+    index: Number,
+    radius: Number
   },
   data () {
     return {

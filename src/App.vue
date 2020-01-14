@@ -8,7 +8,7 @@
     </div>
     <div>
       <kanka-relations 
-        :radius="240"
+        :radius="300"
         :authenticationKey="authenticationKey" 
         :campaign="17724" />
     </div>

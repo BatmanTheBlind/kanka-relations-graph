@@ -4,14 +4,14 @@
     <h2>Entities</h2>
     <div class="container">
         <svg :width="this.radius * 3" :height="this.radius * 3">
-          <kanka-character-svg
-            :key="entity.id"
-            v-for="(entity, index) in entities"
-            :entity="entity"
-            :index = index
-            :point="getPoint(index * step)"
-          />
-          
+            <kanka-character-svg
+              :key="entity.id"
+              v-for="(entity, index) in entities"
+              :entity="entity"
+              :index = index
+              :point="getPoint(index * step)"
+              :radius="60"
+            />
         </svg>
     </div>
   </div>
@@ -49,17 +49,27 @@ export default {
     async authenticationKey () {
       this.config.headers['Authorization'] = `Bearer ${this.authenticationKey}`
       await this.loadEntities()
+    },
+    entities (val) {
+      if (val && val.length > 0) {
+        localStorage.entities = JSON.stringify(val)
+      }
     }
   },
   computed: {
     step () {
-      return Math.floor(360 / this.entities.length)
+      return Math.floor(36000 / this.entities.length) / 100
     }
   },
   methods: {
     async loadEntities () {
-      const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/characters`, this.config)
-      this.entities = response.body.data
+      if (localStorage.entities) {
+        this.entities = JSON.parse(localStorage.entities)
+      } else {
+        const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/characters`, this.config)
+        this.entities = response.body.data
+      }
+      // this.loadRelations()
     },
     async loadRelations () {
       this.entities.map(async entity => {
@@ -69,8 +79,8 @@ export default {
     },
     getPoint (i) {
       const angle = i * Math.PI / 180
-      const x = (this.radius * Math.cos(angle)) + this.radius
-      const y = (this.radius * Math.sin(angle)) + this.radius
+      const x = (this.radius * Math.cos(angle)) + (this.radius * 1.5)
+      const y = (this.radius * Math.sin(angle)) + (this.radius * 1.5)
       return { x, y }
       
     }

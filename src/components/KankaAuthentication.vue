@@ -29,8 +29,14 @@ export default {
     },
     authenticationKey (val) {
       if (this.value !== this.authenticationKey) {
+        localStorage.authenticationKey = val
         this.$emit('input', val)
       }
+    }
+  },
+  mounted () {
+    if (localStorage.authenticationKey) {
+      this.authenticationKey = localStorage.authenticationKey
     }
   }
 }
