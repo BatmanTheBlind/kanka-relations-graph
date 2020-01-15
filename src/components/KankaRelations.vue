@@ -69,11 +69,11 @@ export default {
         const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/characters`, this.config)
         this.entities = response.body.data
       }
-      // this.loadRelations()
+      this.loadRelations()
     },
     async loadRelations () {
       this.entities.map(async entity => {
-        const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/entities/${entity.id}/relations`, this.config)
+        const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/entities/${entity.entity_id}/relations`, this.config)
         entity.relations = response.body.data
       })
     },
