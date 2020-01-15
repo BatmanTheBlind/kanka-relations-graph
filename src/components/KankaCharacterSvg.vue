@@ -1,46 +1,60 @@
 <template>
-    <g :transform="`translate(${point.x},${point.y})`" >
-      <!-- pattern -->
-      <defs>
-        <pattern :id="`image${entity.id}`" x="0%" y="0%" height="100%" width="100%"
-                viewBox="0 0 512 512">
-          <image x="0%" y="0%" width="512" height="512" :xlink:href="entity.image_full"></image>
-        </pattern>
-      </defs>
+  <g :transform="`translate(${point.x},${point.y})`">
+    <!-- pattern -->
+    <defs>
+      <pattern
+        :id="`image${entity.entity_id}`"
+        x="0%"
+        y="0%"
+        height="100%"
+        width="100%"
+        :view-box="`0 0 ${diameter} ${diameter}`"
+      >
+        <image
+          x="0%"
+          y="0%"
+          :width="diameter"
+          :height="diameter"
+          :xlink:href="entity.image_full"
+        />
+      </pattern>
+    </defs>
  
-      <circle 
-        :cx="0"
-        :cy="0"
-        :fill="`url(#image${entity.id})`"
-        :r="radius"/>
-      <text 
-        :x="0"
-        :y="-radius * 0.9"
+    <circle 
+      :cx="0"
+      :cy="0"
+      :fill="`url(#image${entity.entity_id})`"
+      :r="radius"
+    />
+    <text 
+      :x="0"
+      :y="-radius * 0.9"
+      text-anchor="middle"
+      font-family="Verdana" 
+      font-size="15"
+    >
+      <tspan
+        v-for="(partName, namePartIndex) in entity.name.split(' ')"
+        :key="entity.entity_id + 'name' + namePartIndex"
+        x="0"
+        dy="1.2em"
+      >
+        {{ partName }}
+      </tspan>
+      <tspan
+        v-for="(partName, titlePartIndex) in entity.title.split(' ')"
+        :key="entity.entity_id + 'title' + titlePartIndex"
+        x="0"
+        dy="1.2em"
+        fill="white"
         text-anchor="middle"
         font-family="Verdana" 
-        font-size="15">
-        <tspan
-          :key="index"
-          v-for="(partName, index) in entity.name.split(' ')"
-          x="0"
-          dy="1.2em"
-        >
-          {{partName}}
-        </tspan>
-        <tspan
-          :key="index"
-          v-for="(partName, index) in entity.title.split(' ')"
-          x="0"
-          dy="1.2em"
-          fill="white"
-          text-anchor="middle"
-          font-family="Verdana" 
-          font-size="10"
-        >
-          {{partName}}
-        </tspan>
-      </text>
-      <!-- <text 
+        font-size="10"
+      >
+        {{ partName }}
+      </tspan>
+    </text>
+    <!-- <text 
         :x="0"
         :y="10"
         fill="white"
@@ -56,7 +70,7 @@
           {{partName}}
         </tspan>
       </text> -->
-    </g>
+  </g>
 </template>
 
 <script>
@@ -72,6 +86,9 @@ export default {
     return {
       
     }
+  },
+  computed: {
+    diameter() { return this.radius * 2.0 }
   },
   methods: {
     

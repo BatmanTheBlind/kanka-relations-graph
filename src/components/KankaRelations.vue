@@ -1,18 +1,26 @@
 <template>
   <div>
-<!-- entities & relations -->
+    <!-- entities & relations -->
     <h2>Entities</h2>
+    <button
+      @click="clearCache"
+    >
+      Clear local cache of entities
+    </button>
     <div class="container">
-        <svg :width="this.radius * 3" :height="this.radius * 3">
-            <kanka-character-svg
-              :key="entity.id"
-              v-for="(entity, index) in entities"
-              :entity="entity"
-              :index = index
-              :point="getPoint(index * step)"
-              :radius="60"
-            />
-        </svg>
+      <svg
+        :width="radius * 3"
+        :height="radius * 3"
+      >
+        <kanka-character-svg
+          v-for="(entity, index) in entities"
+          :key="entity.id"
+          :entity="entity"
+          :index="index"
+          :point="getPoint(index * step)"
+          :radius="60"
+        />
+      </svg>
     </div>
   </div>
 </template>
@@ -25,9 +33,18 @@ export default {
     KankaCharacterSvg
   },
   props: {
-    campaign: Number,
-    authenticationKey: String,
-    radius: Number
+    campaign: {
+      type:Number,
+      default: null
+    },
+    authenticationKey: {
+      type: String,
+      default: null
+    },
+    radius: {
+      type: Number,
+      default: 200
+    }
   },
   data () {
     return {
@@ -40,9 +57,9 @@ export default {
       entities: []
     }
   },
-  async mounted () {
-    if (this.authenticationKey) {
-      await this.loadEntities()
+  computed: {
+    step () {
+      return Math.floor(36000 / this.entities.length) / 100
     }
   },
   watch: {
@@ -50,39 +67,57 @@ export default {
       this.config.headers['Authorization'] = `Bearer ${this.authenticationKey}`
       await this.loadEntities()
     },
-    entities (val) {
-      if (val && val.length > 0) {
-        localStorage.entities = JSON.stringify(val)
+    entities: { 
+      handler(val) {
+        if (val && val.length > 0) {
+          localStorage.entities = JSON.stringify(val)
+        }
       }
     }
   },
-  computed: {
-    step () {
-      return Math.floor(36000 / this.entities.length) / 100
+  async mounted () {
+    if (this.authenticationKey) {
+      await this.loadEntities()
     }
   },
   methods: {
     async loadEntities () {
       if (localStorage.entities) {
         this.entities = JSON.parse(localStorage.entities)
+        console.log('entities loaded from cache')
       } else {
         const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/characters`, this.config)
         this.entities = response.body.data
+        console.log('entities loaded from API')
       }
       this.loadRelations()
     },
     async loadRelations () {
-      this.entities.map(async entity => {
-        const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/entities/${entity.entity_id}/relations`, this.config)
-        entity.relations = response.body.data
-      })
+      await Promise.all(this.entities.map(async entity => {
+        if(!entity.relations) {
+          try {
+            const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/entities/${entity.entity_id}/relations`, this.config)
+            entity.relations = response.body.data
+            console.log('relations of ' + entity.name + ' loaded from API')
+          } catch (err) {
+            console.log(err)
+          }
+        } else {
+          console.log('relations of ' + entity.name + ' already in cache')
+        }
+      }))
+
+      localStorage.entities = JSON.stringify(this.entities)
     },
     getPoint (i) {
       const angle = i * Math.PI / 180
       const x = (this.radius * Math.cos(angle)) + (this.radius * 1.5)
       const y = (this.radius * Math.sin(angle)) + (this.radius * 1.5)
       return { x, y }
-      
+    },
+    async clearCache () {
+      localStorage.entities = []
+      await this.loadEntities()
     }
   }
 }
