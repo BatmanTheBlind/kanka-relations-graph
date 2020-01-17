@@ -27,7 +27,7 @@
       :r="radius"
     />
     <text 
-      v-if="false"
+      v-if="showLabel"
       :x="0"
       :y="-radius * 0.9"
       text-anchor="middle"
@@ -85,12 +85,16 @@ export default {
       }
     },
     entity: {
-      type:Object,
+      type: Object,
       default: null
     },
     radius: {
-      type:Number,
+      type: Number,
       default: 60
+    },
+    showLabel: {
+      type: Boolean,
+      default: true
     }
   },
   data () {

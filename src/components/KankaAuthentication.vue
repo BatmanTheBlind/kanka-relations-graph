@@ -1,10 +1,23 @@
 <template>
   <span>
     <span v-if="!profile">
-      <span>Please copy/paste your <a href="https://kanka.io/en/settings/api" target="_blank">Personal Access Tokens</a></span>
-      <input v-model="authenticationKey" />
+      <div>
+        Your are not corrected to kanka.io. 
+      </div>
+      <div>
+        Please copy/paste your 
+        <a
+          href="https://kanka.io/en/settings/api"
+          target="_blank"
+        >
+          Personal Access Tokens
+        </a> here in order to get your campaigns data :</div>
+      <input class="input" v-model="authenticationKey">
     </span>
-    <button @click="authenticationKey = null" v-else>Logout</button>
+    <button
+      v-else
+      @click="authenticationKey = ''"
+    >Logout</button>
   </span>
 </template>
 
@@ -13,8 +26,14 @@
 export default {
   name: 'KankaAuthentication',
   props: {
-    value: String,
-    profile: Object
+    value: {
+      type: String, 
+      default: ''
+    },
+    profile: {
+      type:Object, 
+      default: null
+    }
   },
   data () {
     return { 
@@ -41,3 +60,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .input {
+    width:100%;
+  }
+</style>

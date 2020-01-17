@@ -1,15 +1,35 @@
 <template>
-  <div>
+  <div class="main">
+    <!-- options -->
+    <div class="options">
+      <button
+        @click="clearCache"
+      >
+        Clear local cache of entities
+      </button>
+      <div>
+        <input
+          id="character-name"
+          v-model="showCharacterNames"
+          type="checkbox"
+          name="scales"
+        >
+        <label for="character-name">Show characters names</label>
+      </div>
+      <div>
+        <input
+          id="relation-name"
+          v-model="showRelationNames"
+          type="checkbox"
+          name="scales"
+        >
+        <label for="relation-name">Show relations names</label>
+      </div>
+    </div>
     <!-- entities & relations -->
-    <h2>Entities</h2>
-    <button
-      @click="clearCache"
-    >
-      Clear local cache of entities
-    </button>
     <div class="container">
       <svg
-        :width="radius * 3"
+        width="100%"
         :height="radius * 3"
       >
         <template
@@ -19,6 +39,7 @@
             v-for="(relation, relationIndex) in entity.relations"
             :key="`${relation.owner_id}_r${relationIndex}`"
             :label="relation.relation"
+            :show-label="showRelationNames"
             :from="getPoint(entityIndex * step)"
             :to="getPoint(getEntityIndex(relation.target_id) * step)"
           />
@@ -30,7 +51,8 @@
             :key="`entity_${entity.entity_id}`"
             :entity="entity"
             :point="getPoint(entityIndex * step)"
-            :radius="60"
+            :radius="entityRadius"
+            :show-label="showCharacterNames"
           />
         </template>
       </svg>
@@ -69,7 +91,10 @@ export default {
           'Accept': 'application/json'
         }
       },
-      entities: []
+      entities: [],
+      entityRadius: 60,
+      showCharacterNames: true,
+      showRelationNames: true,
     }
   },
   computed: {
@@ -129,8 +154,8 @@ export default {
     },
     getPoint (i) {
       const angle = i * Math.PI / 180
-      const x = (this.radius * Math.cos(angle)) + (this.radius * 1.5)
-      const y = (this.radius * Math.sin(angle)) + (this.radius * 1.5)
+      const x = (this.radius * Math.cos(angle)) + (this.radius + this.entityRadius)
+      const y = (this.radius * Math.sin(angle)) + (this.radius + this.entityRadius)
       return { x, y }
     },
     async clearCache () {
@@ -143,8 +168,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .container {
+  .main {
+    text-align: left;
     display: flex;
-    flex-wrap: wrap;
+    border: dashed 1px grey;
+  }
+  .options {
+    background: grey;
+    color: white;
+    padding: 2px;
+  }
+  .container {
+    flex-basis: 100%;
   }
 </style>

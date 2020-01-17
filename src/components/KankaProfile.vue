@@ -1,13 +1,15 @@
 <template>
-  <div>
+  <div class="identity">
     <template v-if="profile && profile.id">
-    <h2>Logged as</h2>
-    <div>
-      <h4>{{profile.name}}</h4>
-      <img :src="`${profile.avatar_thumb}`" >
-    </div>
+      <div>Logged as {{ profile.name }}</div>
+      <img :src="`${profile.avatar_thumb}`">
     </template>
-    <div v-else>Not logged</div>
+    <div
+      v-else
+      class="error"
+    >
+      {{ error }}
+    </div>
   </div>
 </template>
 
@@ -15,8 +17,14 @@
 export default {
   name: 'KankaProfile',
   props: {
-    authenticationKey: String,
-    value: Object
+    authenticationKey: {
+      type: String,
+      default: ''
+    },
+    value: {
+      type: Object,
+      default: null
+    }
   },
   data () {
     return {
@@ -26,12 +34,8 @@ export default {
           'Accept': 'application/json'
         }
       },
-      profile: Object
-    }
-  },
-  async mounted () {
-    if (this.authenticationKey) {
-      await this.loadProfile()
+      profile: null,
+      error: null
     }
   },
   watch: {
@@ -54,10 +58,19 @@ export default {
       }
     }
   },
+  async mounted () {
+    if (this.authenticationKey) {
+      await this.loadProfile()
+    }
+  },
   methods: {
     async loadProfile () {
-      const response = await this.$http.get(`https://kanka.io/api/1.0/profile`, this.config)
-      this.profile = response.body.data
+      try {
+        const response = await this.$http.get(`https://kanka.io/api/1.0/profile`, this.config)
+        this.profile = response.body.data
+      } catch (err) {
+        this.error = 'Failed to login. Check your access token or try to create a new one.'
+      }
     }
   }
 }
@@ -65,5 +78,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .identity {
+    text-align: left;
+    font-weight: bold;
+  }
+  .error {
+    color:lightcoral;
+  }
 </style>

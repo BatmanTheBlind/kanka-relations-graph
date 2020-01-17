@@ -1,16 +1,25 @@
 <template>
   <div id="app">
-    <div class="header" >
-      <kanka-authentication v-model="authenticationKey" :profile="profile" />
-      <kanka-profile
-        :authenticationKey="authenticationKey" 
-        v-model="profile" />
+    <div class="header">
+      <div class="header-part">
+        <kanka-profile
+          v-model="profile" 
+          :authentication-key="authenticationKey"
+        />
+      </div>
+      <div class="header-part">
+        <kanka-authentication
+          v-model="authenticationKey"
+          :profile="profile"
+        />
+      </div>
     </div>
-    <div>
+    <div class="main-content">
       <kanka-relations 
-        :radius="300"
-        :authenticationKey="authenticationKey" 
-        :campaign="17724" />
+        :radius="400"
+        :authentication-key="authenticationKey" 
+        :campaign="17724"
+      />
     </div>
   </div>
 </template>
@@ -21,7 +30,7 @@ import KankaProfile from './components/KankaProfile.vue'
 import KankaAuthentication from './components/KankaAuthentication.vue'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
     KankaProfile,
     KankaAuthentication,
@@ -43,9 +52,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 .header {
+  background: darkslategrey;
+  color: white;
   display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+.main-content {
+  padding-top: 5px;
 }
 </style>

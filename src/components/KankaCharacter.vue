@@ -1,8 +1,13 @@
 <template>
-  <div class="character" >
-      <h4>{{entity.name}}</h4>
-      <h5 v-if="entity.title">{{entity.title}}</h5>
-      <img class="thumbs" :src="`${entity.image_thumb}`" >
+  <div class="character">
+    <h4>{{ entity.name }}</h4>
+    <h5 v-if="entity.title">
+      {{ entity.title }}
+    </h5>
+    <img
+      class="thumbs"
+      :src="`${entity.image_thumb}`"
+    >
   </div>
 </template>
 

@@ -8,6 +8,7 @@
       style="stroke:rgb(255,0,0);stroke-width:2"
     />
     <text 
+      v-if="showLabel"
       :x="(from.x + to.x) / 2"
       :y="(from.y + to.y) / 2"
       text-anchor="middle"
@@ -34,6 +35,10 @@ export default {
     to: {
       type: Object,
       default: null
+    },
+    showLabel: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
