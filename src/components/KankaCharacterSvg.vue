@@ -27,6 +27,7 @@
       :r="radius"
     />
     <text 
+      v-if="false"
       :x="0"
       :y="-radius * 0.9"
       text-anchor="middle"
@@ -77,10 +78,20 @@
 export default {
   name: 'KankaCharacterSvg',
   props: {
-    point: Object,
-    entity: Object,
-    index: Number,
-    radius: Number
+    point: {
+      type: Object,
+      default() {
+        return { x: 0, y: 0 }
+      }
+    },
+    entity: {
+      type:Object,
+      default: null
+    },
+    radius: {
+      type:Number,
+      default: 60
+    }
   },
   data () {
     return {

@@ -12,14 +12,27 @@
         :width="radius * 3"
         :height="radius * 3"
       >
-        <kanka-character-svg
-          v-for="(entity, index) in entities"
-          :key="entity.id"
-          :entity="entity"
-          :index="index"
-          :point="getPoint(index * step)"
-          :radius="60"
-        />
+        <template
+          v-for="(entity, entityIndex) in entities"
+        >
+          <kanka-relation-svg 
+            v-for="(relation, relationIndex) in entity.relations"
+            :key="`${relation.owner_id}_r${relationIndex}`"
+            :label="relation.relation"
+            :from="getPoint(entityIndex * step)"
+            :to="getPoint(getEntityIndex(relation.target_id) * step)"
+          />
+        </template>
+        <template
+          v-for="(entity, entityIndex) in entities"
+        >
+          <kanka-character-svg
+            :key="`entity_${entity.entity_id}`"
+            :entity="entity"
+            :point="getPoint(entityIndex * step)"
+            :radius="60"
+          />
+        </template>
       </svg>
     </div>
   </div>
@@ -27,10 +40,12 @@
 
 <script>
 import KankaCharacterSvg from './KankaCharacterSvg.vue'
+import KankaRelationSvg from './KankaRelationSvg.vue'
 export default {
   name: 'KankaRelations',
   components: {
-    KankaCharacterSvg
+    KankaCharacterSvg,
+    KankaRelationSvg
   },
   props: {
     campaign: {
@@ -108,6 +123,9 @@ export default {
       }))
 
       localStorage.entities = JSON.stringify(this.entities)
+    },
+    getEntityIndex (entityId) {
+      return this.entities.findIndex(e => e.entity_id == entityId)
     },
     getPoint (i) {
       const angle = i * Math.PI / 180
