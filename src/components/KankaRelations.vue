@@ -63,12 +63,16 @@
 <script>
 import KankaCharacterSvg from './KankaCharacterSvg.vue'
 import KankaRelationSvg from './KankaRelationSvg.vue'
+import KankaApiClient from '../mixins/KankaApiClient.js'
 export default {
   name: 'KankaRelations',
   components: {
     KankaCharacterSvg,
     KankaRelationSvg
   },
+  mixins: [
+    KankaApiClient
+  ],
   props: {
     campaign: {
       type:Number,
@@ -85,12 +89,6 @@ export default {
   },
   data () {
     return {
-      config: {
-        headers: {
-          'Authorization': 'Bearer ' + this.authenticationKey,
-          'Accept': 'application/json'
-        }
-      },
       entities: [],
       entityRadius: 60,
       showCharacterNames: true,
@@ -103,10 +101,6 @@ export default {
     }
   },
   watch: {
-    async authenticationKey () {
-      this.config.headers['Authorization'] = `Bearer ${this.authenticationKey}`
-      await this.loadEntities()
-    },
     entities: { 
       handler(val) {
         if (val && val.length > 0) {
@@ -121,12 +115,15 @@ export default {
     }
   },
   methods: {
+    async load () {
+      await this.loadEntities()
+    },
     async loadEntities () {
       if (localStorage.entities) {
         this.entities = JSON.parse(localStorage.entities)
         console.log('entities loaded from cache')
       } else {
-        const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/characters`, this.config)
+        const response = await this.$http.get(`${this.kankaApiUrl}/campaigns/${this.campaign}/characters`, this.config)
         this.entities = response.body.data
         console.log('entities loaded from API')
       }
@@ -136,7 +133,7 @@ export default {
       await Promise.all(this.entities.map(async entity => {
         if(!entity.relations) {
           try {
-            const response = await this.$http.get(`https://kanka.io/api/1.0/campaigns/${this.campaign}/entities/${entity.entity_id}/relations`, this.config)
+            const response = await this.$http.get(`${this.kankaApiUrl}/campaigns/${this.campaign}/entities/${entity.entity_id}/relations`, this.config)
             entity.relations = response.body.data
             console.log('relations of ' + entity.name + ' loaded from API')
           } catch (err) {

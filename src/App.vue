@@ -8,6 +8,9 @@
         />
       </div>
       <div class="header-part">
+        hello
+      </div>
+      <div class="header-part">
         <kanka-authentication
           v-model="authenticationKey"
           :profile="profile"

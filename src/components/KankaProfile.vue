@@ -14,13 +14,13 @@
 </template>
 
 <script>
+import KankaApiClient from '../mixins/KankaApiClient.js'
 export default {
   name: 'KankaProfile',
+  mixins: [
+    KankaApiClient
+  ],
   props: {
-    authenticationKey: {
-      type: String,
-      default: ''
-    },
     value: {
       type: Object,
       default: null
@@ -28,25 +28,11 @@ export default {
   },
   data () {
     return {
-      config: {
-        headers: {
-          'Authorization': 'Bearer ' + this.authenticationKey,
-          'Accept': 'application/json'
-        }
-      },
       profile: null,
       error: null
     }
   },
   watch: {
-    async authenticationKey () {
-      if (this.authenticationKey) {
-        this.config.headers['Authorization'] = `Bearer ${this.authenticationKey}`
-        await this.loadProfile()
-      } else {
-        this.profile = null
-      }
-    },
     value (val) {
       if (this.value !== this.profile) {
         this.profile = val
@@ -64,9 +50,12 @@ export default {
     }
   },
   methods: {
+    async load () {
+      this.loadProfile()
+    },
     async loadProfile () {
       try {
-        const response = await this.$http.get(`https://kanka.io/api/1.0/profile`, this.config)
+        const response = await this.$http.get(`${this.kankaApiUrl}/profile`, this.config)
         this.profile = response.body.data
       } catch (err) {
         this.error = 'Failed to login. Check your access token or try to create a new one.'
