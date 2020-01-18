@@ -1,6 +1,9 @@
 name: CI
 
-on: [push]
+on: 
+  push:
+    branches:    
+      - master # Push events on master branch
 
 jobs:
   build:
@@ -18,3 +21,13 @@ jobs:
       run: |
         npm install
         npm run build --if-present
+
+    - name: ssh deployment
+      uses: appleboy/scp-action@master
+      env:
+        HOST: ${{ secrets.HOST }}
+        PORT: ${{ secrets.PORT }}
+        USERNAME: ${{ secrets.FTP_USERNAME }}
+        PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        SOURCE: dist/*
+        TARGET: ${{ secrets.TARGET_FOLDER }}
