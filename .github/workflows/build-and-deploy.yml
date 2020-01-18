@@ -29,6 +29,7 @@ jobs:
         PORT: ${{ secrets.PORT }}
         USERNAME: ${{ secrets.FTP_USERNAME }}
         PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        SOURCE: dist/*
-        TARGET: ${{ secrets.TARGET_FOLDER }}
+      with:
+        source: dist/*
+        target: ${{ secrets.TARGET_FOLDER }}
         strip_components: 1

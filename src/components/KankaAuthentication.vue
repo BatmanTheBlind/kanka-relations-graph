@@ -12,7 +12,10 @@
         >
           Personal Access Tokens
         </a> here in order to get your campaigns data :</div>
-      <input class="input" v-model="authenticationKey">
+      <input
+        v-model="authenticationKey"
+        class="input"
+      >
     </span>
     <button
       v-else
