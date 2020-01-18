@@ -8,7 +8,10 @@
         />
       </div>
       <div class="header-part">
-        hello
+        <kanka-campaign-selector
+          v-model="selectedCampaign"
+          :authentication-key="authenticationKey"
+        />
       </div>
       <div class="header-part">
         <kanka-authentication
@@ -19,9 +22,10 @@
     </div>
     <div class="main-content">
       <kanka-relations 
+        v-if="selectedCampaign > 0"
         :radius="400"
         :authentication-key="authenticationKey" 
-        :campaign="17724"
+        :campaign="selectedCampaign"
       />
     </div>
   </div>
@@ -29,6 +33,7 @@
 
 <script>
 import KankaRelations from './components/KankaRelations.vue'
+import KankaCampaignSelector from './components/KankaCampaignSelector.vue'
 import KankaProfile from './components/KankaProfile.vue'
 import KankaAuthentication from './components/KankaAuthentication.vue'
 
@@ -37,12 +42,14 @@ export default {
   components: {
     KankaProfile,
     KankaAuthentication,
-    KankaRelations
+    KankaRelations,
+    KankaCampaignSelector
   },
   data () {
     return { 
       authenticationKey: '',
-      profile: null
+      profile: null,
+      selectedCampaign: 0
     }
   }
 }

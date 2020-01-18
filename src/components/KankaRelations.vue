@@ -107,6 +107,9 @@ export default {
           localStorage.entities = JSON.stringify(val)
         }
       }
+    },
+    campaign () {
+      this.clearCache()
     }
   },
   async mounted () {

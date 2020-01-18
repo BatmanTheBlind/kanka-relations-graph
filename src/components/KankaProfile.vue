@@ -58,7 +58,7 @@ export default {
         const response = await this.$http.get(`${this.kankaApiUrl}/profile`, this.config)
         this.profile = response.body.data
       } catch (err) {
-        this.error = 'Failed to login. Check your access token or try to create a new one.'
+        this.error = 'Failed to login. Wait 1 or 2 minutes and try again. If it keep failing, check your access token or try to create a new one.'
       }
     }
   }
