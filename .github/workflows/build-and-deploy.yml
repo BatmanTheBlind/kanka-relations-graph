@@ -31,3 +31,4 @@ jobs:
         PASSWORD: ${{ secrets.FTP_PASSWORD }}
         SOURCE: dist/*
         TARGET: ${{ secrets.TARGET_FOLDER }}
+        strip_components: 1
