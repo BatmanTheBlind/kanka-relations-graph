@@ -23,11 +23,18 @@
     <circle 
       :cx="0"
       :cy="0"
+      :fill="`black`"
+      :r="radius"
+    />
+    <circle 
+      v-if="entity.image"
+      :cx="0"
+      :cy="0"
       :fill="`url(#image${entity.entity_id})`"
       :r="radius"
     />
     <text 
-      v-if="showLabel"
+      v-if="showLabel || !entity.image"
       :x="0"
       :y="-radius * 0.9"
       text-anchor="middle"
@@ -39,6 +46,7 @@
         :key="entity.entity_id + 'name' + namePartIndex"
         x="0"
         dy="1.2em"
+        fill="grey"
       >
         {{ partName }}
       </tspan>

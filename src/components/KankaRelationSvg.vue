@@ -1,10 +1,14 @@
 <template>
   <g>
-    <line
-      :x1="from.x"
-      :y1="from.y"
-      :x2="to.x"
-      :y2="to.y"
+    <path
+      v-if="center"
+      :d="`M ${from.x} ${from.y} C ${center.x} ${center.y}, ${center.x} ${center.y},  ${to.x} ${to.y}`"
+      style="stroke:rgb(0,0,0);stroke-width:2"
+      fill="transparent"
+    />
+    <path
+      v-else
+      :d="`M ${from.x} ${from.y} L ${to.x} ${to.y}`"
       style="stroke:rgb(255,0,0);stroke-width:2"
     />
     <text 
@@ -33,6 +37,10 @@ export default {
       default: null
     },
     to: {
+      type: Object,
+      default: null
+    },
+    center: {
       type: Object,
       default: null
     },

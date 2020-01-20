@@ -44,7 +44,7 @@ export default {
     selectedCampaign (val) {
       if (this.value !== this.selectedCampaign) {
         localStorage.selectedCampaign = val
-        this.$emit('input', val)
+        this.$emit('input', parseInt(val))
       }
     },
     campaigns (val) {

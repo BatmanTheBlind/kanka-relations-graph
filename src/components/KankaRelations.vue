@@ -42,6 +42,7 @@
             :show-label="showRelationNames"
             :from="getPoint(entityIndex * step)"
             :to="getPoint(getEntityIndex(relation.target_id) * step)"
+            :center="center"
           />
         </template>
         <template
@@ -91,13 +92,19 @@ export default {
     return {
       entities: [],
       entityRadius: 60,
-      showCharacterNames: true,
-      showRelationNames: true,
+      showCharacterNames: false,
+      showRelationNames: false,
     }
   },
   computed: {
     step () {
       return Math.floor(36000 / this.entities.length) / 100
+    },
+    center () {
+      return {
+        x: this.radius + this.entityRadius,
+        y: this.radius + this.entityRadius
+      }
     }
   },
   watch: {
