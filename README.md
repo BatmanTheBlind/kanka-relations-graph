@@ -2,7 +2,7 @@
 
 ## About
 
-This is a small one page web application that fetch all your characters and locations data from a kanka.io campaign, and drawn a graph based on the relations between them.
+This is a small one page web application that fetch all your characters data from a kanka.io campaign, and drawn a graph based on the relations between them.
 
 This is a project using Vue.js
 
