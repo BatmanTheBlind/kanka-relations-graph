@@ -39,14 +39,14 @@
         :height="radius * 3"
       >
         <template
-          v-for="(entity, entityIndex) in entities"
+          v-for="(entity) in entities"
         >
           <kanka-relation-svg 
             v-for="(relation, relationIndex) in entity.relations"
             :key="`${relation.owner_id}_r${relationIndex}`"
             :label="relation.relation"
             :show-label="showRelationNames"
-            :from="getPoint(entityIndex * step)"
+            :from="getPoint(getEntityIndex(relation.owner_id) * step)"
             :to="getPoint(getEntityIndex(relation.target_id) * step)"
             :center="center"
           />
@@ -141,7 +141,13 @@ export default {
       } else {
         try {
           const response = await this.$http.get(`${this.kankaApiUrl}/campaigns/${this.campaign}/characters`, this.config)
-          this.entities = response.body.data
+          this.entities = response.body.data.map(character => {
+            return {
+              ...character,
+              relations: [],
+              relationLoaded: false
+            }
+          })
           console.log('entities loaded from API')
         } catch (err) {
           this.handleError(err)
@@ -151,10 +157,11 @@ export default {
     },
     async loadRelations () {
       await Promise.all(this.entities.map(async entity => {
-        if(!entity.relations) {
+        if(!entity.relationLoaded) {
           try {
             const response = await this.$http.get(`${this.kankaApiUrl}/campaigns/${this.campaign}/entities/${entity.entity_id}/relations`, this.config)
             entity.relations = response.body.data
+            entity.relationLoaded = true
             console.log('relations of ' + entity.name + ' loaded from API')
           } catch (err) {
             this.handleError(err)
