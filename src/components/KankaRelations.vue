@@ -2,6 +2,12 @@
   <div class="main">
     <!-- options -->
     <div class="options">
+      <div
+        v-if="error"
+        class="error"
+      >
+        {{ error }}
+      </div>
       <button
         @click="clearCache"
       >
@@ -93,7 +99,7 @@ export default {
       entities: [],
       entityRadius: 60,
       showCharacterNames: false,
-      showRelationNames: false,
+      showRelationNames: false
     }
   },
   computed: {
@@ -133,9 +139,13 @@ export default {
         this.entities = JSON.parse(localStorage.entities)
         console.log('entities loaded from cache')
       } else {
-        const response = await this.$http.get(`${this.kankaApiUrl}/campaigns/${this.campaign}/characters`, this.config)
-        this.entities = response.body.data
-        console.log('entities loaded from API')
+        try {
+          const response = await this.$http.get(`${this.kankaApiUrl}/campaigns/${this.campaign}/characters`, this.config)
+          this.entities = response.body.data
+          console.log('entities loaded from API')
+        } catch (err) {
+          this.handleError(err)
+        }
       }
       this.loadRelations()
     },
@@ -147,7 +157,7 @@ export default {
             entity.relations = response.body.data
             console.log('relations of ' + entity.name + ' loaded from API')
           } catch (err) {
-            console.log(err)
+            this.handleError(err)
           }
         } else {
           console.log('relations of ' + entity.name + ' already in cache')

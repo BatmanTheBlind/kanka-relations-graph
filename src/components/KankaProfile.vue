@@ -28,8 +28,7 @@ export default {
   },
   data () {
     return {
-      profile: null,
-      error: null
+      profile: null
     }
   },
   watch: {
@@ -58,7 +57,7 @@ export default {
         const response = await this.$http.get(`${this.kankaApiUrl}/profile`, this.config)
         this.profile = response.body.data
       } catch (err) {
-        this.error = 'Failed to login. Wait 1 or 2 minutes and try again. If it keep failing, check your access token or try to create a new one.'
+        this.handleError(err)
       }
     }
   }
@@ -70,8 +69,5 @@ export default {
   .identity {
     text-align: left;
     font-weight: bold;
-  }
-  .error {
-    color:lightcoral;
   }
 </style>

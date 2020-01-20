@@ -73,4 +73,7 @@ export default {
 .main-content {
   padding-top: 5px;
 }
+.error {
+  color:lightcoral;
+}
 </style>
