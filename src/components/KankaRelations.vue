@@ -97,7 +97,7 @@ export default {
   data () {
     return {
       entities: [],
-      entityRadius: 60,
+      entityRadius: 55,
       showCharacterNames: false,
       showRelationNames: false
     }
@@ -134,26 +134,39 @@ export default {
     async load () {
       await this.loadEntities()
     },
-    async loadEntities () {
-      if (localStorage.entities) {
+    async loadEntities (entityType) {
+      await Promise.all([
+        this.loadEntitiesType('characters'),
+        this.loadEntitiesType('locations'),
+        this.loadEntitiesType('organisations')
+      ])
+      localStorage.entitiesLoaded = true
+      await this.loadRelations()
+    },
+    async loadEntitiesType (entityType) {
+      if (localStorage.entitiesLoaded === 'true') {
         this.entities = JSON.parse(localStorage.entities)
         console.log('entities loaded from cache')
       } else {
         try {
-          const response = await this.$http.get(`${this.kankaApiUrl}/campaigns/${this.campaign}/characters`, this.config)
-          this.entities = response.body.data.map(character => {
-            return {
-              ...character,
-              relations: [],
-              relationLoaded: false
-            }
-          })
-          console.log('entities loaded from API')
+          this.entities = []
+          let nextPage = `${this.kankaApiUrl}/campaigns/${this.campaign}/${entityType}`
+          while (nextPage) {
+            const response = await this.$http.get(nextPage, this.config)
+            this.entities = this.entities.concat(response.body.data.map(character => {
+              return {
+                ...character,
+                relations: [],
+                relationLoaded: false
+              }
+            }))
+            nextPage = response.body.links.next
+          } 
+          console.log(entityType + ' loaded from API')
         } catch (err) {
           this.handleError(err)
         }
       }
-      this.loadRelations()
     },
     async loadRelations () {
       await Promise.all(this.entities.map(async entity => {
@@ -183,6 +196,7 @@ export default {
       return { x, y }
     },
     async clearCache () {
+      localStorage.entitiesLoaded = false
       localStorage.entities = []
       await this.loadEntities()
     }

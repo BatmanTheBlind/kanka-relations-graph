@@ -23,7 +23,7 @@
     <div class="main-content">
       <kanka-relations 
         v-if="selectedCampaign > 0"
-        :radius="400"
+        :radius="550"
         :authentication-key="authenticationKey" 
         :campaign="selectedCampaign"
       />

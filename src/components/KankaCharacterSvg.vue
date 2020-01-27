@@ -23,7 +23,7 @@
     <circle 
       :cx="0"
       :cy="0"
-      :fill="`black`"
+      :fill="`white`"
       :r="radius"
     />
     <circle 
@@ -50,18 +50,20 @@
       >
         {{ partName }}
       </tspan>
-      <tspan
-        v-for="(partName, titlePartIndex) in entity.title.split(' ')"
-        :key="entity.entity_id + 'title' + titlePartIndex"
-        x="0"
-        dy="1.2em"
-        fill="white"
-        text-anchor="middle"
-        font-family="Verdana" 
-        font-size="10"
-      >
-        {{ partName }}
-      </tspan>
+      <template v-if="entity.title" >
+        <tspan
+          v-for="(partName, titlePartIndex) in entity.title.split(' ')"
+          :key="entity.entity_id + 'title' + titlePartIndex"
+          x="0"
+          dy="1.2em"
+          fill="white"
+          text-anchor="middle"
+          font-family="Verdana" 
+          font-size="10"
+        >
+          {{ partName }}
+        </tspan>
+      </template>
     </text>
     <!-- <text 
         :x="0"
