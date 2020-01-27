@@ -8,7 +8,6 @@
         y="0%"
         height="100%"
         width="100%"
-        :view-box="`0 0 ${diameter} ${diameter}`"
       >
         <image
           x="0%"
@@ -24,19 +23,22 @@
       :cx="0"
       :cy="0"
       :fill="`white`"
+      :stroke="`black`"
       :r="radius"
+      shape-rendering="geometricPrecision"
     />
     <circle 
       v-if="entity.image"
       :cx="0"
       :cy="0"
       :fill="`url(#image${entity.entity_id})`"
+      shape-rendering="geometricPrecision"
       :r="radius"
     />
     <text 
       v-if="showLabel || !entity.image"
-      :x="0"
-      :y="-radius * 0.9"
+      :x="textPosition.x"
+      :y="textPosition.y"
       text-anchor="middle"
       font-family="Verdana" 
       font-size="15"
@@ -50,7 +52,7 @@
       >
         {{ partName }}
       </tspan>
-      <template v-if="entity.title" >
+      <template v-if="entity.title">
         <tspan
           v-for="(partName, titlePartIndex) in entity.title.split(' ')"
           :key="entity.entity_id + 'title' + titlePartIndex"
@@ -113,7 +115,13 @@ export default {
     }
   },
   computed: {
-    diameter() { return this.radius * 2.0 }
+    diameter () { return this.radius * 2.0 },
+    textPosition () {
+      return {
+        x: 0,
+        y: this.entity.title ? this.radius * -0.9 : this.radius * -0.5
+      }
+    }
   },
   methods: {
     

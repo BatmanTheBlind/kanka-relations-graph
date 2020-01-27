@@ -5,6 +5,7 @@
       :d="`M ${from.x} ${from.y} C ${center.x} ${center.y}, ${center.x} ${center.y},  ${to.x} ${to.y}`"
       style="stroke:rgb(0,0,0);stroke-width:2"
       fill="transparent"
+      shape-rendering="geometricPrecision"
     />
     <path
       v-else
@@ -13,9 +14,9 @@
     />
     <text 
       v-if="showLabel"
-      :x="(from.x + to.x) / 2"
-      :y="(from.y + to.y) / 2"
-      text-anchor="middle"
+      :x="from.x"
+      :y="from.y"
+      text-anchor="start"
       font-family="Verdana" 
       font-size="15"
     >
